@@ -41,10 +41,27 @@ def rand_precision_range(precision, A, B):
     return round(random.uniform(A, B), precision)
 
 
+def sphere(x):
+    suma = 0
+    for i in x:
+        suma = suma + pow(i, 2)
+    return suma
+
+
+def fitness_sphere(x):
+    suma = 0
+    for i in x:
+        suma = suma + pow(i, 2)
+    if suma == 0:
+        return 0
+    else:
+        return 1 / suma
+
+
 def rosenbrock(x):
     suma = 0
-    for i in range(0, len(x)-1):
-        suma = suma + 100.0 * (x[i+1] - x[i] ** 2.0) ** 2.0 + (1 - x[i]) ** 2.0
+    for i in range(0, len(x) - 1):
+        suma = suma + 100.0 * (x[i + 1] - x[i] ** 2.0) ** 2.0 + (1 - x[i]) ** 2.0
     return suma
 
 
@@ -52,7 +69,23 @@ def fitness_rosenbrock(x):
     suma = 0
     for i in range(0, len(x) - 1):
         suma = suma + 100.0 * (x[i + 1] - x[i] ** 2.0) ** 2.0 + (1 - x[i]) ** 2.0
-    return 1/suma
+    if suma == 0:
+        return 0
+    else:
+        return 1 / suma
+
+
+def shekels_foxholes(x):
+    a_ij = [[-32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32]
+            [-32, -32, -32, -32, -32, -16, -16, -16, -16, -16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 32, 32, 32, 32, 32]]
+    # https://al-roomi.org/benchmarks/unconstrained/2-dimensions/7-shekel-s-foxholes-function
+    suma = 1 / 500
+    for i in range(1, 25):
+        pass
+
+
+def fitness_foxholes(x):
+    pass
 
 
 def mutation(chromosome, seed_=None):
@@ -70,16 +103,12 @@ def mutation(chromosome, seed_=None):
 
 
 def crossover(chromosome1, chromosome2, seed_=None):
-
-
     r = random.randint(0, len(chromosome1) - 1)
-
 
     o1 = chromosome1[:r] + chromosome2[r:]
     o2 = chromosome2[:r] + chromosome1[r:]
 
     return [o1, o2]
-
 
 # A = -1
 # B = 2
