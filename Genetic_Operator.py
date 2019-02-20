@@ -29,3 +29,4 @@ class GeneticOperator:
 
 
         return [o1, o2]
+

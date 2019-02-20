@@ -10,10 +10,15 @@ from Tournament_Selection import TournamentSelection
 class GeneticAlgorithm:
     average = []
     best = []
+    iter_best = []
+    iter_avg = []
+    best_ = []
+    avg_ = []
 
-    def __init__(self, population, generation_number, selection_type, precision, cros, mut, function, n, interval,
+    def __init__(self, number_iter, population, generation_number, selection_type, precision, cros, mut, function, n, interval,
                  seed_):
         print("Doszło #000000")
+        self.number_iter = number_iter
         self.popu = population
         self.generation_number = generation_number
         self.selection_type = selection_type
@@ -41,62 +46,96 @@ class GeneticAlgorithm:
         return self.average
 
     def start(self):
-        self.population = self.create_populations()
-        print("self population ", self.population)
-        licznik = 0
-        while licznik < self.generation_number:
-            print("Doszło #2")
+        for iterator in range(0, self.number_iter):
+            print("##################################################################")
+            self.population = self.create_populations()
+            print("self population ", self.population)
+            licznik = 0
+            while licznik < self.generation_number:
+                print("Doszło #2")
 
-            # Tworzenie Fitnesu
-            self.create_fitness()
-            print("Doszło #3")
-            # Zamiana na binarne
-            self.toBinary()
-            print("Doszło #4")
-            # Selekcja
-            if self.selection_type == 0:
-                # Koło ruletki
-                self.rulette_wheele()
-            elif self.selection_type == 1:
-                # Turniejowa
-                self.tournament_selection(2)
-            elif self.selection_type == 2:
-                # Turniejowa
-                self.tournament_selection(3)
-            elif self.selection_type == 3:
-                # Turniejowa
-                self.tournament_selection(4)
-            elif self.selection_type == 4:
-                # Turniejowa
-                self.tournament_selection(5)
+                # Tworzenie Fitnesu
+                self.create_fitness()
+                print("Doszło #3")
+                # Zamiana na binarne
+                self.toBinary()
+                print("Doszło #4")
+                # Selekcja
+                if self.selection_type == 0:
+                    # Koło ruletki
+                    self.rulette_wheele()
+                elif self.selection_type == 1:
+                    # Turniejowa
+                    self.tournament_selection(2)
+                elif self.selection_type == 2:
+                    # Turniejowa
+                    self.tournament_selection(3)
+                elif self.selection_type == 3:
+                    # Turniejowa
+                    self.tournament_selection(4)
+                elif self.selection_type == 4:
+                    # Turniejowa
+                    self.tournament_selection(5)
 
-            # Krzyżowanie
-            self.crossover()
-            print("Doszło #6")
-            # Rozłącz na pojedyńcze punkty
-            self.split_chromosome()
-            print("Doszło #7")
-            print(licznik, " - ", self.population)
-            licznik = licznik + 1
-            self.get_best()
-            self.get_average(0)
+                # Krzyżowanie
+                self.crossover()
+                print("Doszło #6")
+                #Mutacja
+                self.mutation()
+                # Rozłącz na pojedyńcze punkty
+                self.split_chromosome()
+                print("Doszło #7")
+                print(licznik, " - ", self.population)
+                licznik = licznik + 1
+                self.get_best()
+                self.get_average()
+                print("Koniec ag")
+
+            a = self.average[:]
+            b = self.best[:]
+            self.iter_avg.append(a)
+            self.iter_best.append(b)
+            self.average = []
+            self.best = []
+
+        self.best_=(self.get_avg(self.iter_best))
+        self.avg_ = (self.get_avg(self.iter_avg))
+        Conversion.save_best_and_avg(self)
+
+    def get_avg(self, list):
+        avg = []
+
+        for x in range(0, len(list[0])):
+            suma = 0
+            for t in range(0, len(list)):
+                suma = suma + (list[t][x])
+            avg.append(suma/len(list))
+        return avg
+
+
+
 
     def get_best(self):
         min_ = []
         for i in self.population:
-            r = FunctionsAndFittnes.rosenbrock(i)
+            if self.function == 0:
+                r = FunctionsAndFittnes.rosenbrock(i)
+            elif self.function == 1:
+                r = FunctionsAndFittnes.sphere(i)
+            elif self.function == 2:
+                r = FunctionsAndFittnes.shekels_foxholes(i, self.n)
             min_.append(r)
 
         self.best.append(min(min_))
 
-    def get_average(self, number_of_function):
+    def get_average(self):
         suma = 0
         for i in self.population:
-            if number_of_function == 0:
+            if self.function == 0:
                 suma = suma + FunctionsAndFittnes.rosenbrock(i)
-            elif number_of_function == 1:
+            elif self.function == 1:
                 suma = suma + FunctionsAndFittnes.sphere(i)
-            elif number_of_function == 2:
+            elif self.function == 2:
                 suma = suma + FunctionsAndFittnes.shekels_foxholes(i, self.n)
         avg = suma / len(self.population)
         self.average.append(avg)
@@ -116,10 +155,10 @@ class GeneticAlgorithm:
         self.population = new_population
 
     def mutation(self):
+        mut = []
         for i in self.population:
-            # r = random.random()
-            # if r <= mut:
-            i = GeneticOperator.mutation(i, self.mut)
+            mut.append(GeneticOperator.mutation(i, self.mut))
+        self.population = mut
 
     def crossover(self):
         c = []
@@ -169,8 +208,6 @@ class GeneticAlgorithm:
         self.population = r.get_chosen()
 
     def tournament_selection(self, k):
-        # ToDo
-        # Zrobić toooooooooooooooooooooooooooo!!!!!!!!!!!!!!!!
         ts = TournamentSelection(self.population, k)
         after_ts = ts.tournament()
         self.population = after_ts
@@ -199,7 +236,6 @@ class GeneticAlgorithm:
                 fitness = 1 / FunctionsAndFittnes.sphere(i)
             elif self.function == 2:
                 fitness = 1 / FunctionsAndFittnes.shekels_foxholes(i, self.n)
-
             i.append(fitness)
 
     def create_populations(self):

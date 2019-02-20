@@ -1,9 +1,7 @@
 import itertools
 import random
 import textwrap
-
-import numpy as np
-
+from pathlib import Path
 
 class Conversion:
 
@@ -15,7 +13,7 @@ class Conversion:
     @staticmethod
     def to_decimal(b, A, B, chromosome_length, precision):
         binary = int(b, 2)
-        x = ((B-A) * binary) / (pow(2, chromosome_length) - 1) + A
+        x = ((B - A) * binary) / (pow(2, chromosome_length) - 1) + A
         return round(x, precision)
 
     @staticmethod
@@ -45,25 +43,68 @@ class Conversion:
             if pow(2, i) < small_sectors < pow(2, i + 1):
                 return i + 1
 
+    @staticmethod
+    def save_best_and_avg(obj):
+        path_absolute = Path().absolute()
+        data = "# \tIlosc uruchomien AG: {}\n" \
+               "# \tZiarno: {}\n" \
+               "# \tRozmiar populacji: {}\n" \
+               "# \tLiczba generacji: {}\n" \
+               "# \tTyp Selekcji: {}\n" \
+               "# \tPrecyzja wyniku: {}\n" \
+               "# \tPrawdopodobienstwo krzyzowania: {}\n" \
+               "# \tPrawdopodobienstwo mutacji: {}\n" \
+               "# \tFunkcja: {}\n" \
+               "# \tIlosc zmiennych: {}\n" \
+               "# \tPrzedzial: {};{}\n".format(obj.number_iter, obj.seed, obj.popu, obj.generation_number,
+                                        obj.selection_type, obj.precision, obj.cros, obj.mut, obj.function,
+                                        obj.n, obj.A, obj.B)
 
-# A = -2.0
-# B = 2.5
-# precision = 3
-# losowanie populacji startowej
 
-
-# print("x", Conversion.to_binary(-5.5, 13))
-# print("y", np.binary_repr(5, 13))
-#
-# def bindigits(n, bits):
-#     s = bin(n & int("1"*bits, 2))[2:]
-#     return ("{0:0>%s}" % (bits)).format(s)
-#
-# print(bindigits(-3, 4))
-#
-# print(bin(-5))
-# print(int("-0b101", 2))
-
-# print(Conversion.to_binary(-2.348, -2, 2.5, 13))
-#
-# print(Conversion.to_decimal("1111011101011", -2, 2.5, 13, 3))
+        print(data)
+        print("Best")
+        print(obj.iter_best)
+        print("AVG")
+        print(obj.iter_avg)
+        with open('best.txt', 'w') as file:
+            file.write(data)
+            file.write("#Skrypt do Gnuplota:\n")
+            l = "#set style data lines\n#plot '{}\\best.txt'".format(path_absolute)
+            for i in range(0, len(obj.iter_avg)):
+                if i == 0:
+                    l = l + " using 1:{}, ".format(i + 2)
+                else:
+                    l = l + "'' using 1:{}, ".format(i + 2)
+            l = l[:len(l) - 2]
+            l = l + "\n"
+            file.write(l)
+            file.write("#numer_iteracji \t #iter_1 \t #iter_2 \n")
+            # line = ""
+            for i in range(0, len(obj.iter_best[0])):
+                line = "{} \t".format(i + 1)
+                for j in range(0, len(obj.iter_best)):
+                    line = line + "{} \t".format(obj.iter_best[j][i])
+                line = line + "\n"
+                file.write(line)
+        with open('avg.txt', 'w') as file:
+            file.write(data)
+            file.write("#Skrypt do Gnuplota:\n")
+            l = "#set style data lines\n#plot '{}\\avg.txt'".format(path_absolute)
+            for i in range(0, len(obj.iter_avg)):
+                if i == 0:
+                    l = l + " using 1:{}, ".format(i + 2)
+                else:
+                    l = l + "'' using 1:{}, ".format(i + 2)
+            l = l[:len(l) - 2]
+            l = l + "\n"
+            file.write(l)
+            # file.write("set style data lines\n#plot 'gnuplot.txt' using 1:2, '' using 1:3\n")
+            # file.write("\n")
+            file.write("#numer_iteracji \t #iter_1 \t #iter_2 \n")
+            # line = ""
+            for i in range(0, len(obj.iter_avg[0])):
+                line = "{} \t".format(i + 1)
+                for j in range(0, len(obj.iter_avg)):
+                    line = line + "{} \t".format(obj.iter_avg[j][i])
+                line = line + "\n"
+                file.write(line)

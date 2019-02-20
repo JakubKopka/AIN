@@ -5,10 +5,6 @@ from random import seed
 class RuletteWheele:
     chromosomes = []
 
-    def __init__(self):
-        self.chromosomes = [['0010001', 1.245], ["0100000", 1.658], ["0100010", 1.8]]
-        self.get_probability_dict()
-
     def __init__(self, chromosomes):
         self.chromosomes = chromosomes
         self.get_probability()
@@ -23,6 +19,7 @@ class RuletteWheele:
         for i in self.chromosomes:
             # i[-1] = abs(i[-1])
             i[-1] = i[-1] / total_fit
+            # print("osobnik :", i)
 
 
     def roulette_wheel_pop(self):
@@ -32,18 +29,19 @@ class RuletteWheele:
         while True:
 
             for i in self.chromosomes:
-                if len(chosen) >= len(self.chromosomes):
+                if len(chosen) == len(self.chromosomes):
                     return chosen
                 r = random.random()
                 if r <= i[-1]:
                     chosen.append(i[0])
 
-        return chosen
+
 
     def get_chosen(self):
         return self.roulette_wheel_pop()
 
     def min_value(self):
+        print(self.chromosomes)
         max_ = max([sublist[-1] for sublist in self.chromosomes])
         best = ([sublist for sublist in self.chromosomes if max_ == sublist[-1]] )
 

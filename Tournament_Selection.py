@@ -17,7 +17,7 @@ class TournamentSelection():
 
             while len(new_population) <= len(self.chromosomes):
                 tour = []
-                for i in range(0, pow(self.k_size, self.k_size)):
+                for i in range(0, (self.k_size * self.k_size)):
                     r = random.randint(0, len(self.chromosomes) - 1)
                     for iter, i in enumerate(self.chromosomes):
                         if r == iter:
