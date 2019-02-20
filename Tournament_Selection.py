@@ -1,5 +1,4 @@
 import random
-from random import seed
 
 
 class TournamentSelection():
@@ -28,7 +27,3 @@ class TournamentSelection():
                     if i[-1] is max_:
                         new_population.append(i[0])
             return new_population
-
-
-# ts = TournamentSelection([['111100000', 1.2], ['10001', 1.3], ['10101', 1.4]], 2)
-# print(ts.tournament())

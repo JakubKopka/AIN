@@ -3,6 +3,7 @@ import random
 import textwrap
 from pathlib import Path
 
+
 class Conversion:
 
     @staticmethod
@@ -57,9 +58,8 @@ class Conversion:
                "# \tFunkcja: {}\n" \
                "# \tIlosc zmiennych: {}\n" \
                "# \tPrzedzial: {};{}\n".format(obj.number_iter, obj.seed, obj.popu, obj.generation_number,
-                                        obj.selection_type, obj.precision, obj.cros, obj.mut, obj.function,
-                                        obj.n, obj.A, obj.B)
-
+                                               obj.selection_type, obj.precision, obj.cros, obj.mut, obj.function,
+                                               obj.n, obj.A, obj.B)
 
         print(data)
         print("Best")
@@ -98,10 +98,7 @@ class Conversion:
             l = l[:len(l) - 2]
             l = l + "\n"
             file.write(l)
-            # file.write("set style data lines\n#plot 'gnuplot.txt' using 1:2, '' using 1:3\n")
-            # file.write("\n")
             file.write("#numer_iteracji \t #iter_1 \t #iter_2 \n")
-            # line = ""
             for i in range(0, len(obj.iter_avg[0])):
                 line = "{} \t".format(i + 1)
                 for j in range(0, len(obj.iter_avg)):

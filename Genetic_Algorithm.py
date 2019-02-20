@@ -1,5 +1,3 @@
-import random
-
 from Conversion import *
 from Functions_and_Fittnes import FunctionsAndFittnes
 from Genetic_Operator import GeneticOperator
@@ -15,19 +13,17 @@ class GeneticAlgorithm:
     best_ = []
     avg_ = []
 
-    def __init__(self, number_iter, population, generation_number, selection_type, precision, cros, mut, function, n, interval,
+    def __init__(self, number_iter, population, generation_number, selection_type, precision, cros, mut, function, n,
+                 interval,
                  seed_):
-        print("Doszło #000000")
         self.number_iter = number_iter
         self.popu = population
         self.generation_number = generation_number
         self.selection_type = selection_type
-        print("selection_type", selection_type)
         self.precision = precision
         self.cros = cros
         self.mut = mut
         self.function = function
-        print ("f:",function)
         self.n = n
         interval = interval.split(';')
         self.A = float(interval[0])
@@ -47,19 +43,14 @@ class GeneticAlgorithm:
 
     def start(self):
         for iterator in range(0, self.number_iter):
-            print("##################################################################")
             self.population = self.create_populations()
-            print("self population ", self.population)
             licznik = 0
             while licznik < self.generation_number:
-                print("Doszło #2")
-
+                print("Populacja nr {}\n".format(licznik+1), self.population)
                 # Tworzenie Fitnesu
                 self.create_fitness()
-                print("Doszło #3")
                 # Zamiana na binarne
                 self.toBinary()
-                print("Doszło #4")
                 # Selekcja
                 if self.selection_type == 0:
                     # Koło ruletki
@@ -79,17 +70,13 @@ class GeneticAlgorithm:
 
                 # Krzyżowanie
                 self.crossover()
-                print("Doszło #6")
-                #Mutacja
+                # Mutacja
                 self.mutation()
                 # Rozłącz na pojedyńcze punkty
                 self.split_chromosome()
-                print("Doszło #7")
-                print(licznik, " - ", self.population)
                 licznik = licznik + 1
                 self.get_best()
                 self.get_average()
-                print("Koniec ag")
 
             a = self.average[:]
             b = self.best[:]
@@ -98,7 +85,7 @@ class GeneticAlgorithm:
             self.average = []
             self.best = []
 
-        self.best_=(self.get_avg(self.iter_best))
+        self.best_ = (self.get_avg(self.iter_best))
         self.avg_ = (self.get_avg(self.iter_avg))
         Conversion.save_best_and_avg(self)
 
@@ -109,11 +96,8 @@ class GeneticAlgorithm:
             suma = 0
             for t in range(0, len(list)):
                 suma = suma + (list[t][x])
-            avg.append(suma/len(list))
+            avg.append(suma / len(list))
         return avg
-
-
-
 
     def get_best(self):
         min_ = []
@@ -163,45 +147,32 @@ class GeneticAlgorithm:
     def crossover(self):
         c = []
         after_crossover = []
-        print("Przed krzyżowanie ", self.population)
         for i in self.population:
             r = random.random()
             if r <= self.cros:
                 c.append(i)
-        print("Doszło 0")
         if len(c) < len(self.population):
-            print("Weszło")
-            # print("Długość N: ", N_)
-            # print("Długość przed: ", len(c))
             for i in range((len(self.population) - len(c))):
                 r = random.randint(0, len(c) - 1)
                 print(len(c) - 1)
                 c.append(c[r])
-            # print("Długość po: ", len(c))
-        print("Doszło 1")
+
         unpaired = False
         if len(c) % 2 != 0:  # musi być parzyscie do krzyżowania
             c.append(c[0])
             unpaired = True
 
-
         ax = c[:len(c) // 2]
         ay = c[len(c) // 2:]
-        print("Doszło 2")
         for i in range(0, len(ax)):
             o1, o2 = GeneticOperator.crossover(ax[i], ay[i])
             after_crossover.append(o1)
             after_crossover.append(o2)
-        print("Doszło 3")
         if unpaired:  # Do krzyżowania jest potrzerbna parzysta liczba osobników, ale nie może być ich po krzyżowaniu więcej niż N_ więc usuwamy ostatniego
-            # print("Przed: ", after_crossover)
             del after_crossover[-1]
-            # print("Po: ", after_crossover)
             unpaired = False
-        # print("Krzyżowanie ", after_crossover)
 
         self.population = after_crossover
-        print("Po krzyżowaniu ", self.population)
 
     def rulette_wheele(self):
         r = RuletteWheele(self.population)
@@ -227,7 +198,6 @@ class GeneticAlgorithm:
         self.population = bin_population
 
     def create_fitness(self):
-        print("Doszło 2.5")
         print(self.population)
         for i in self.population:
             if self.function == 0:

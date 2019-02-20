@@ -1,21 +1,11 @@
-import random
-import sys
 import tkinter as tk
-import matplotlib.pyplot as plt
-import numpy as np
-import ctypes
-
-import wave
-
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
-from matplotlib import pylab
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
 from Functions_and_Fittnes import FunctionsAndFittnes
 from Genetic_Algorithm import GeneticAlgorithm
-
 
 from matplotlib import cm
 from matplotlib.colors import LogNorm
@@ -143,7 +133,6 @@ class Window(QDialog):
         menu.addWidget(self.text_mut)
         menu.addWidget(self.mut)
 
-
         menu.addWidget(splitter1)
 
         menu.addWidget(self.f_)
@@ -224,7 +213,6 @@ class Window(QDialog):
         self.nd.setLayout(layout)
         self.nd.show()
 
-
     def startAG(self):
         print("Population:", self.population.text())
         print("Generation Number: ", self.generation_number.text())
@@ -237,12 +225,6 @@ class Window(QDialog):
         print("Interval: ", self.interval.text())
         print("Seed: ", self.seed.text())
         print("Doszło #0")
-        # print(int(self.population.text()), int(self.generation_number.text()),
-        #                       self.selection_type.currentIndex(),
-        #                       self.precision.currentIndex() + 2, float(self.cros.text()),
-        #                       float(self.mut.text()),int(self.function.currentIndex()), int(self.n.text()),
-        #       self.interval.text(),  int(self.seed.text())
-        #                       )
 
         if self.seed.text() == "":
             self.seed = "-1"
@@ -257,7 +239,6 @@ class Window(QDialog):
                               self.seed)
         self.plot(list(range(1, len(ga.avg_) + 1)), ga.avg_, list(range(1, len(ga.best_) + 1)), ga.best_)
 
-
     def plot(self, x1, y1, x2, y2):
         plt.clf()
         root = tk.Tk()
@@ -267,7 +248,7 @@ class Window(QDialog):
         plt.plot(x1, y1, "r")
         plt.plot(x2, y2, "c")
         plt.xlabel('Numer generacji')
-        plt.ylabel('Średnia osobników / Najlepszy osobnik')
+        plt.ylabel('Najlepszy osobnik \ Średnia osobników')
         plt.subplot(2, 1, 2)
         plt.plot(x2, y2, "c")
         plt.xlabel('Numer generacji')
