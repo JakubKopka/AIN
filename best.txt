@@ -1,0 +1,20 @@
+# 	Ilosc uruchomien AG: 1
+# 	Ziarno: -1
+# 	Rozmiar populacji: 5
+# 	Liczba generacji: 5
+# 	Typ Selekcji: 0
+# 	Precyzja wyniku: 2
+# 	Prawdopodobienstwo krzyzowania: 0.9
+# 	Prawdopodobienstwo mutacji: 0.01
+# 	Funkcja: 0
+# 	Ilosc zmiennych: 2
+# 	Przedzial: -2.5;3.0
+#Skrypt do Gnuplota:
+#set style data lines
+#plot 'C:\Users\Kuba\PycharmProjects\AIN\best.txt' using 1:2
+#numer_iteracji 	 #iter_1 	 #iter_2 
+1 	2.7567410000000008 	
+2 	2.7567410000000008 	
+3 	0.918941 	
+4 	0.918941 	
+5 	0.918941 	
