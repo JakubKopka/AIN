@@ -24,6 +24,8 @@ class FunctionsAndFittnes():
         suma = 0
         for i in range(0, len(x) - 1):
             suma = suma + 100.0 * (x[i + 1] - x[i] ** 2.0) ** 2.0 + (1 - x[i]) ** 2.0
+        if suma <= 0:
+            suma = 0.00000000000000000000000001
         return suma
 
 
@@ -42,7 +44,6 @@ class FunctionsAndFittnes():
                 suma_i = suma_i + pow((x[i] - a[i][j]), 6)
             suma_j = suma_j + 1/suma_i
 
-        print("Suma: ", suma_j)
         if suma_j == 0:
             suma_j = 0.00000000000000000000000001
         if suma_j > 99999999999:

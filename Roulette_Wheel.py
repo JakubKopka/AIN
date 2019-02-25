@@ -13,8 +13,10 @@ class RuletteWheele:
         for i in self.chromosomes:
             suma = suma + i[-1]
         total_fit = float(suma)
+
         for i in self.chromosomes:
             i[-1] = i[-1] / total_fit
+
 
     def roulette_wheel_pop(self):
         chosen = []
@@ -26,12 +28,24 @@ class RuletteWheele:
                 r = random.random()
                 if r <= i[-1]:
                     chosen.append(i[0])
+    # def roulette_wheel_pop(self):
+    #     chosen = []
+    #     chosen.append(self.min_value()[0])
+    #     while len(chosen) < len(self.chromosomes):
+    #         value = random.random()
+    #         for i in self.chromosomes:
+    #
+    #             value = value - i[-1]
+    #             if (value < 0):
+    #                 chosen.append(i[0])
+    #                 break
+    #
+    #     return chosen
 
     def get_chosen(self):
         return self.roulette_wheel_pop()
 
     def min_value(self):
-        print(self.chromosomes)
         max_ = max([sublist[-1] for sublist in self.chromosomes])
         best = ([sublist for sublist in self.chromosomes if max_ == sublist[-1]])
 

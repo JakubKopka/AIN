@@ -61,7 +61,6 @@ class Conversion:
                                                obj.selection_type, obj.precision, obj.cros, obj.mut, obj.function,
                                                obj.n, obj.A, obj.B)
 
-        print(data)
         print("Best")
         print(obj.iter_best)
         print("AVG")
@@ -105,3 +104,31 @@ class Conversion:
                     line = line + "{} \t".format(obj.iter_avg[j][i])
                 line = line + "\n"
                 file.write(line)
+
+    @staticmethod
+    def get_min_from_list_in_list(x):
+        # lista [x1,x2, fitness]
+        current_min_chromosome = [None, None, 10000000000]
+
+        for chromosome in x:
+            if chromosome[-1] < current_min_chromosome[-1]:
+                current_min_chromosome = chromosome
+
+        return current_min_chromosome
+
+    @staticmethod
+    def get_max_from_list_in_list(x):
+        # lista [x1,x2, fitness]
+        current_max_chromosome = [None, None, -1]
+
+        for chromosome in x:
+            if chromosome[-1] > current_max_chromosome[-1]:
+                current_max_chromosome = chromosome
+
+        return current_max_chromosome
+
+
+# # Test
+# ch = [[1, 2, 3], [4, 5, 6], [0, 0, 0], [1, 1, -1]]
+# print(Conversion.get_min_from_list_in_list(ch))
+# print(Conversion.get_max_from_list_in_list(ch))

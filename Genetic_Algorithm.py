@@ -12,6 +12,7 @@ class GeneticAlgorithm:
     iter_avg = []
     best_ = []
     avg_ = []
+    current_min_chromosoem = []
 
     def __init__(self, number_iter, population, generation_number, selection_type, precision, cros, mut, function, n,
                  interval,
@@ -78,6 +79,21 @@ class GeneticAlgorithm:
                 self.get_best()
                 self.get_average()
 
+                # chromosome_fitness = []
+                # for chromosome in self.population:
+                #     if self.function == 0:
+                #         r = FunctionsAndFittnes.rosenbrock(chromosome)
+                #     elif self.function == 1:
+                #         r = FunctionsAndFittnes.sphere(chromosome)
+                #     elif self.function == 2:
+                #         r = FunctionsAndFittnes.shekels_foxholes(chromosome, self.n)
+                #     current = chromosome[:]
+                #     current.append(r)
+                #     chromosome_fitness.append(current)
+                #
+                # self.current_min_chromosoem = Conversion.get_min_from_list_in_list(chromosome_fitness)
+                # print(self.current_min_chromosoem )
+
             a = self.average[:]
             b = self.best[:]
             self.iter_avg.append(a)
@@ -87,6 +103,15 @@ class GeneticAlgorithm:
 
         self.best_ = (self.get_avg(self.iter_best))
         self.avg_ = (self.get_avg(self.iter_avg))
+
+        # b = []
+        # for best in self.best_:
+        #     b.append(round(best, self.precision))
+        # self.best_ = b
+        # a = []
+        # for avg in self.avg_:
+        #     a.append(round(avg, self.precision))
+        # self.avg_ = a
         Conversion.save_best_and_avg(self)
 
     def get_avg(self, list):
@@ -154,7 +179,6 @@ class GeneticAlgorithm:
         if len(c) < len(self.population):
             for i in range((len(self.population) - len(c))):
                 r = random.randint(0, len(c) - 1)
-                print(len(c) - 1)
                 c.append(c[r])
 
         unpaired = False
@@ -198,7 +222,6 @@ class GeneticAlgorithm:
         self.population = bin_population
 
     def create_fitness(self):
-        print(self.population)
         for i in self.population:
             if self.function == 0:
                 fitness = 1 / FunctionsAndFittnes.rosenbrock(i)
