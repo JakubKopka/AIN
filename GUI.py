@@ -1,5 +1,7 @@
+import ctypes
 import tkinter as tk
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import *
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
@@ -84,11 +86,11 @@ class Window(QDialog):
 
         # Liczba generacji
         self.generation_number = QLineEdit()
-        self.generation_number.setText("100")
+        self.generation_number.setText("200")
 
         # Rozmiar populacji
         self.population = QLineEdit()
-        self.population.setText("500")
+        self.population.setText("100")
 
         # Ilosć zmiennych
         self.n = QLineEdit()
@@ -167,51 +169,8 @@ class Window(QDialog):
         self.show()
 
     def show_f(self):
-        class NewDialog(QDialog):
-            def __init__(self, parent):
-                super(NewDialog, self).__init__(parent)
-
-        self.nd = NewDialog(self)
-
-        fig = plot.figure()
-        ax = fig.gca(projection='3d')
-        X = None
-        Y = None
-        Z = None
-        if self.function.currentIndex() == 1:
-            s = 1
-            X = np.arange(-10, 10. + s, s)
-            Y = np.arange(-10, 10. + s, s)
-            X, Y = np.meshgrid(X, Y)
-            Z = FunctionsAndFittnes.sphere([X, Y])
-
-        elif self.function.currentIndex() == 0:
-            s = 0.1
-            X = np.arange(-2, 2. + s, s)
-            Y = np.arange(-1, 3. + s, s)
-            X, Y = np.meshgrid(X, Y)
-            Z = FunctionsAndFittnes.rosenbrock([X, Y])
-        elif self.function.currentIndex() == 2:
-            s = 10
-            X = np.arange(-80, 80. + s, s)
-            Y = np.arange(-80, 80. + s, s)
-            X, Y = np.meshgrid(X, Y)
-            Z = FunctionsAndFittnes.shekels_foxholes([X, Y], 2)
-
-        ax.plot_surface(X, Y, Z, rstride=1, cstride=1, norm=LogNorm(), cmap=cm.jet)
-
-        canvas = FigureCanvas(fig)
-        toolbar = NavigationToolbar(canvas, self)
-        fig.canvas.draw()
-        wykres = QVBoxLayout()
-
-        wykres.addWidget(toolbar)
-        wykres.addWidget(canvas, 1)
-
-        layout = QHBoxLayout()
-        layout.addLayout(wykres)
-        self.nd.setLayout(layout)
-        self.nd.show()
+        self.SW = PlotWindow(self.function.currentIndex())
+        self.SW.show()
 
     def startAG(self):
         print("Population:", self.population.text())
@@ -223,6 +182,7 @@ class Window(QDialog):
         print("Function: ", self.function.currentIndex())
         print("n: ", self.n.text())
         print("Interval: ", self.interval.text())
+        print("Doszło #-1")
         print("Seed: ", self.seed.text())
         print("Doszło #0")
 
@@ -230,6 +190,7 @@ class Window(QDialog):
             self.seed = "-1"
         else:
             self.seed = int(self.seed.text())
+
 
         ga = GeneticAlgorithm(int(self.iter.text()), int(self.population.text()), int(self.generation_number.text()),
                               self.selection_type.currentIndex(),
@@ -255,3 +216,43 @@ class Window(QDialog):
         plt.ylabel('Najlepszy osobnik')
 
         self.canvas.draw()
+
+
+
+class PlotWindow(QWidget):
+
+    def __init__(self, function):
+        super().__init__()
+        self.function = function
+        user32 = ctypes.windll.user32
+        szerokosc = 640
+        wysokosc = 480
+
+        self.title = 'Podgląd wybranej funkcji'
+        self.left = user32.GetSystemMetrics(0) / 2 - szerokosc / 2
+        self.top = user32.GetSystemMetrics(1) / 2 - wysokosc / 2
+        self.width = szerokosc
+        self.height = wysokosc
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle(self.title)
+
+        self.setGeometry(self.left, self.top, self.width, self.height)
+
+        # Create widget
+        label = QLabel(self)
+
+        function_image = None
+        if self.function == 0:
+            function_image = QPixmap('r.png')
+        if self.function == 1:
+            function_image = QPixmap('s.png')
+        elif self.function == 2:
+            function_image = QPixmap('f.png')
+
+        label.setPixmap(function_image)
+        self.resize(function_image.width(), function_image.height())
+
+
+        self.show()

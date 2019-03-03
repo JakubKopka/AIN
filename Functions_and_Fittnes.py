@@ -16,7 +16,13 @@ class FunctionsAndFittnes():
         for i in x:
             suma = suma + pow(i, 2)
         if suma == 0:
-            suma = 0.00000000000000000000000001
+            suma = 0.00000000000000001
+        return suma
+
+    def sphere_(x):
+        suma = 0
+        for i in x:
+            suma = suma + pow(i, 2)
         return suma
 
     @staticmethod
@@ -28,6 +34,13 @@ class FunctionsAndFittnes():
             suma = 0.00000000000000000000000001
         return suma
 
+    @staticmethod
+    def rosenbrock_(x):
+        suma = 0
+        for i in range(0, len(x) - 1):
+            suma = suma + 100.0 * (x[i + 1] - x[i] ** 2.0) ** 2.0 + (1 - x[i]) ** 2.0
+
+        return suma
 
     @staticmethod
     def shekels_foxholes(x, x_numbers):
@@ -50,6 +63,24 @@ class FunctionsAndFittnes():
             suma_j = 99999999999;
 
         return 1/suma_j
+
+    @staticmethod
+    def shekels_foxholes_(x, x_numbers):
+        a = [
+            [-32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32, -32, -16, 0, 16, 32],
+            [-32, -32, -32, -32, -32, -16, -16, -16, -16, -16, 0, 0, 0, 0, 0, 16, 16, 16, 16, 16, 32, 32, 32, 32, 32]
+        ]
+        # https://al-roomi.org/benchmarks/unconstrained/2-dimensions/7-shekel-s-foxholes-function
+
+        suma_j = 1 / 500
+        for j in range(0, pow(5, x_numbers)):
+            suma_i = j
+            for i in range(0, x_numbers):
+                suma_i = suma_i + pow((x[i] - a[i][j]), 6)
+            suma_j = suma_j + 1 / suma_i
+
+
+        return 1 / suma_j
 
     @staticmethod
     def show_function(fun):
